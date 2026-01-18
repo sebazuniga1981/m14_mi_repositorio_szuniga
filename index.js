@@ -7,11 +7,11 @@ const PORT = 3000;
 
 const REPERTORIO_PATH = path.join(__dirname, "repertorio.json");
 
-// Middlewares
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public"))); // sirve el cliente (apoyo)
 
-// Helpers
+
 const leerRepertorio = async () => {
   try {
     const data = await fs.readFile(REPERTORIO_PATH, "utf8");
@@ -31,7 +31,7 @@ const guardarRepertorio = async (arr) => {
   await fs.writeFile(REPERTORIO_PATH, JSON.stringify(arr, null, 2), "utf8");
 };
 
-// 2) Devolver página web en GET (requisito del desafío)
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
@@ -71,7 +71,6 @@ app.post("/canciones", async (req, res) => {
   }
 });
 
-// PUT /canciones/:id -> edita canción
 app.put("/canciones/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
@@ -82,7 +81,6 @@ app.put("/canciones/:id", async (req, res) => {
 
     if (idx === -1) return res.status(404).json({ error: "Canción no encontrada" });
 
-    // Actualiza solo lo que venga
     canciones[idx] = {
       ...canciones[idx],
       ...(titulo !== undefined ? { titulo } : {}),
@@ -97,8 +95,6 @@ app.put("/canciones/:id", async (req, res) => {
   }
 });
 
-// DELETE /canciones/:id -> elimina canción
-// (además soporta queryString: /canciones/0?id=3 por si el cliente lo manda así)
 app.delete("/canciones/:id", async (req, res) => {
   try {
     const id = Number(req.params.id) || Number(req.query.id);
